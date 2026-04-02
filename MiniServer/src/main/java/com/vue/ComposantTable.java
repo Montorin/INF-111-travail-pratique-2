@@ -2,6 +2,7 @@ package com.vue;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.MouseListener;
 import java.util.Vector;
 
@@ -39,10 +40,29 @@ public class ComposantTable extends JPanel {
         this.table = new JTable();
         this.table.setFont(Config.fonte); // considère la fonte définie dans Config
 
-        // TODO : À compléter/modifier
+        // Affichage du titre de la table
+        this.setBorder(BorderFactory.createTitledBorder(titre));
 
+        // Creation DefaultTableModel + rendre la table non-éditable
+        DefaultTableModel modele = new DefaultTableModel(null, this.nomsColonnes) {
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
+        };
 
+        this.table.setModel(modele);
 
+        // Permettre la sélection d’un seul élément de la table
+        this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        // Empêcher la réorganisation des colonnes
+        this.table.getTableHeader().setReorderingAllowed(false);
+
+        // Panneau de défilement
+        JScrollPane scrollPane = new JScrollPane(this.table);
+        scrollPane.setPreferredSize(new java.awt.Dimension(largeur, hauteur));
+        this.add(scrollPane);
     }
 
     /**
@@ -63,8 +83,7 @@ public class ComposantTable extends JPanel {
      * @param ml L'écouteur de clic souris qui sera averti si un évènement de clic survient sur cette table.
      */
     public void enregistrerEcouteur(MouseListener ml) {
-        // TODO : À compléter/modifier
-        System.err.println("Méthode ComposantTable.enregistrerEcouteur non implémentée.");
+        this.table.addMouseListener(ml);
     }
 
     /**
@@ -74,9 +93,7 @@ public class ComposantTable extends JPanel {
      * @return La ligne sélectionnée ou -1 síl n'y a aucune sélection.
      */
     public int ligneSelectionnee() {
-        // TODO : À compléter/modifier
-        System.err.println("Méthode ComposantTable.ligneSelectionnee non implémentée.");
-        return -1;
+        return this.table.getSelectedRow(); // retourne -1 aussi
     }
 
     /**
@@ -96,11 +113,11 @@ public class ComposantTable extends JPanel {
      * @param donnees La matrice de données.
      */
     public void mettreAJour(Vector<Vector<String>> donnees) {
-        // TODO : À compléter/modifier
-        System.err.println("Méthode ComposantTable.mettreAJour non implémentée.");
+        DefaultTableModel modele = (DefaultTableModel) this.table.getModel();
+
+        // (String[]) en Vector<String>
+        Vector<String> colonnesVector = new Vector<>(java.util.Arrays.asList(this.nomsColonnes));
+
+        modele.setDataVector(donnees, colonnesVector);
     }
-
-    // TODO : À compléter/modifier
-
-
 }
