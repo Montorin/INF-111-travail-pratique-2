@@ -16,7 +16,7 @@ public class EcouteurListeLivreurs {
      */
     public EcouteurListeLivreurs(PanneauLivreurs panneauLivreurs) {
         // TODO : À compléter/modifier
-        System.err.println("Méthode EcouteurListeLivreurs.EcouteurListeLivreurs non implémentée.");
+        this.panneauLivreurs = panneauLivreurs;
     }
 
     // TODO : À compléter/modifier

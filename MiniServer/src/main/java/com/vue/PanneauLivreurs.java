@@ -3,14 +3,19 @@ package com.vue;
 import com.gestionnaireLivraisons.*;
 import com.controleur.EcouteurListeLivreurs;
 
+import com.observer.Observateur;
+import com.observer.Observable;
+import java.util.Vector;
+
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Classe de type JPanel pour lister les livreurs enregistrés.
  *
  *
  */
-public class PanneauLivreurs extends JPanel {
+public class PanneauLivreurs extends JPanel implements Observateur {
     // private final JTable table;
     private ComposantTable tableLivreurs;
 
@@ -27,9 +32,16 @@ public class PanneauLivreurs extends JPanel {
      * @param gestionnaireLivraisons Le gestionnaire de livraisons associé.
      */
     public PanneauLivreurs(MiniServerUI miniServerUI, GestionnaireLivraisons gestionnaireLivraisons) {
-        // TODO : À compléter/modifier
-        System.err.println("Méthode PanneauLivreurs.PanneauLivreurs non implémentée.");
+        this.miniServerUI = miniServerUI;
+        this.gestionnaireLivraisons = gestionnaireLivraisons;
 
+        // Question 2.1
+        this.tableLivreurs = new ComposantTable("Liste des livreurs", 450, 250, this.nomsColonnes, this.donneesCentrees);
+        this.setLayout(new BorderLayout());
+        this.add(this.tableLivreurs, BorderLayout.CENTER);
+
+        // Question 2.2
+        this.gestionnaireLivraisons.ajouterObservateur(this);
     }
 
     /**
@@ -38,9 +50,7 @@ public class PanneauLivreurs extends JPanel {
      * @return La fenêtre graphique principale dans laquelle se trouve ce panneau.
      */
     public MiniServerUI getMiniServerUI() {
-        // TODO : À compléter/modifier
-        System.err.println("Méthode PanneauLivreurs.getMiniServerUI non implémentée.");
-        return null;
+        return this.miniServerUI;
     }
 
     /**
@@ -49,9 +59,7 @@ public class PanneauLivreurs extends JPanel {
      * @param ecouteurLL L'écouteur à ajouter.
      */
     public void enregisterEcouteur(EcouteurListeLivreurs ecouteurLL) {
-        // TODO : À compléter/modifier
-        System.err.println("Méthode PanneauLivreurs.enregisterEcouteur non implémentée.");
-
+        this.tableLivreurs.enregistrerEcouteur(ecouteurLL); // TODO: TO FIX
     }
 
     /**
@@ -61,12 +69,53 @@ public class PanneauLivreurs extends JPanel {
      * @return Le livreur sélectionné dans cette table.
      */
     public Livreur livreurSelectionne() {
-        // TODO : À compléter/modifier
-        System.err.println("Méthode PanneauLivreurs.livreurSelectionne non implémentée.");
-        return null;
+        int ligne = this.tableLivreurs.ligneSelectionnee();
+
+        // Null si aucun livreur n'est sélectionné
+        if (ligne <= -1) { return null; }
+
+        // Retourne l'objet Livreur sélectionné dans la Table
+        String idTexte = this.tableLivreurs.lireCase(ligne, 0);
+        int id = Integer.parseInt(idTexte);
+        return this.gestionnaireLivraisons.getLivreursEnregistres().rechercher(id);
     }
 
-    // TODO : À compléter/modifier
+    @Override
+    public void seMettreAJour(Observable observable) {
+        // Préparer la structure de données pour la table
+        Vector<Vector<String>> matriceDonnees = new Vector<>();
 
+        for (Livreur livreur : this.gestionnaireLivraisons.getLivreursEnregistres()) {
+            Vector<String> ligne = new Vector<>();
 
+            // Id
+            ligne.add(String.valueOf(livreur.getId()));
+
+            // Nom
+            ligne.add(livreur.getNom());
+
+            // Type
+            if (livreur instanceof LivreurVelo) {
+                ligne.add("vélo");
+            } else if (livreur instanceof LivreurCamion) {
+                ligne.add("camion");
+            } else if (livreur instanceof LivreurVoiture) {
+                ligne.add("voiture");
+            } else {
+                ligne.add("inconnu");
+            }
+
+            // isAuthentifie
+            if (livreur.isAuthentifie()) {
+                ligne.add("✔");
+            } else {
+                ligne.add("✘");
+            }
+
+            matriceDonnees.add(ligne);
+        }
+
+        // Mettre à jour l'affichage visuel
+        this.tableLivreurs.mettreAJour(matriceDonnees);
+    }
 }
