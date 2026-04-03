@@ -1,18 +1,26 @@
 package com.vue;
 
 import com.gestionnaireLivraisons.*;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 /**
  * Classe qui affiche la boite de dialogue pour les informations d'un livreur.
  *
  */
-public class InfoLivreurDialogue {
+public class InfoLivreurDialogue extends JDialog {
 
     private Livreur livreur;
 
     private ComposantTable grilleLivraisonsEnCours;
     private ComposantTable grilleLivraisonsEffectuees;
+
+    private final String[] nomsColonnes = {"Id", "Lot", "Priorité", "Tentatives"};
 
     /**
      * Le constructeur de cette boite de dialogue.
@@ -21,8 +29,16 @@ public class InfoLivreurDialogue {
      * @param livreur                Le livreur dont on veut afficher les données (infos personnelles et livraisons).
      */
     public InfoLivreurDialogue(MiniServerUI miniServerUI, Livreur livreur) {
-        // TODO : À compléter/modifier
-        System.err.println("Méthode InfoLivreurDialogue.InfoLivreurDialogue non implémentée.");
+        super(miniServerUI, "Informations livreur", false);
+        this.livreur = livreur;
+
+        this.initialiserComposants();
+
+        // Taille de la fenetre
+        this.pack();
+        this.setMinimumSize(new Dimension(800, 300));
+        this.setLocationRelativeTo(miniServerUI);
+        this.setVisible(true);
     }
 
     /**
@@ -31,8 +47,59 @@ public class InfoLivreurDialogue {
      *
      */
     private void initialiserComposants() {
-        // TODO : À compléter/modifier
-        System.err.println("Méthode InfoLivreurDialogue.initialiserComposants non implémentée.");
+        this.setLayout(new BorderLayout(10, 10));
+
+        // 1. Infos du livreur
+        JPanel panneauInfos = new JPanel();
+        panneauInfos.setLayout(new BoxLayout(panneauInfos, BoxLayout.Y_AXIS));
+        panneauInfos.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        String typeLivreur = "";
+        if (this.livreur instanceof LivreurVelo)
+            typeLivreur = "vélo";
+        else if (this.livreur instanceof LivreurCamion)
+            typeLivreur = "camion";
+        else if (this.livreur instanceof LivreurVoiture)
+            typeLivreur = "voiture";
+
+        panneauInfos.add(Box.createVerticalGlue());
+        panneauInfos.add(new JLabel("Id : " + this.livreur.getId()));
+        panneauInfos.add(new JLabel("Nom : " + this.livreur.getNom()));
+        panneauInfos.add(new JLabel("Type : " + typeLivreur));
+        panneauInfos.add(new JLabel("Capacité : " + this.livreur.capaciteLivraison()));
+        panneauInfos.add(Box.createVerticalGlue());
+
+        this.add(panneauInfos, BorderLayout.WEST);
+
+        // 2. Livraison en cours/effectuer
+        JPanel panneauTables = new JPanel(new GridLayout(1, 2, 10, 0));
+
+        this.grilleLivraisonsEnCours = new ComposantTable("Livraisons en cours", 300, 200, nomsColonnes);
+        this.grilleLivraisonsEffectuees = new ComposantTable("Livraisons effectuées", 300, 200, nomsColonnes);
+
+        panneauTables.add(this.grilleLivraisonsEnCours);
+        panneauTables.add(this.grilleLivraisonsEffectuees);
+
+        this.add(panneauTables, BorderLayout.CENTER);
+
+        // remplir donner
+        Vector<Vector<String>> donneesEnCours = calculerDonnees(this.livreur.getLivraisonsEnCours());
+        Vector<Vector<String>> donneesEffectuees = calculerDonnees(this.livreur.getLivraisonsEffectuees());
+
+        this.grilleLivraisonsEnCours.mettreAJour(donneesEnCours);
+        this.grilleLivraisonsEffectuees.mettreAJour(donneesEffectuees);
+
+        // 3. Bouton fermer
+        JPanel panneauBouton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton boutonFermer = new JButton("Fermer");
+
+        boutonFermer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {dispose();}
+        });
+
+        panneauBouton.add(boutonFermer);
+        this.add(panneauBouton, BorderLayout.SOUTH);
     }
 
     /**
@@ -42,9 +109,18 @@ public class InfoLivreurDialogue {
      * @return La matrice des données relatives à la liste de livraisons.
      */
     private Vector<Vector<String>> calculerDonnees(IListeLivraisons livraisons) {
-        // TODO : À compléter/modifier
-        return null;
-    }
+        Vector<Vector<String>> matriceDonnees = new Vector<>();
 
-    // TODO : À compléter/modifier
+        if (livraisons != null) {
+            for (Livraison livraison : livraisons) {
+                Vector<String> ligne = new Vector<>();
+                ligne.add(String.valueOf(livraison.getId()));
+                ligne.add(String.valueOf(livraison.getLot()));
+                ligne.add(livraison.getPriorite().toString());
+                ligne.add(String.valueOf(livraison.getTentative()));
+                matriceDonnees.add(ligne);
+            }
+        }
+        return matriceDonnees;
+    }
 }

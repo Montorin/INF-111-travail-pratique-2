@@ -45,6 +45,8 @@ public class MiniServerUI extends JFrame {
         this.setTitle("Gestionnaire de livraisons");
         this.setSize(980, 450);
         this.setLocation(100, 100);
+
+        this.setVisible(true);
     }
 
     /**
@@ -57,15 +59,15 @@ public class MiniServerUI extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         // TODO : À compléter/modifier
         // se reporter à la documentation de JMenu et JMenuBar pour cette partie...
-        System.err.println("Menu non implémenté dans la méthode MiniServerUI.initialiserComposants.");
+        //System.err.println("Menu non implémenté dans la méthode MiniServerUI.initialiserComposants.");
 
 
         //  Préparer le contenu de la fenêtre.
         // TODO : À compléter/modifier
-        System.err.println("Contenu de la fenêtre manquant dans la méthode MiniServerUI.initialiserComposants.");
+        //System.err.println("Contenu de la fenêtre manquant dans la méthode MiniServerUI.initialiserComposants.");
 
         // TODO : À compléter/modifier
-        System.err.println("Ecouteur de fermeture de fenêtre manquant dans la méthode MiniServerUI.initialiserComposants.");
+       // System.err.println("Ecouteur de fermeture de fenêtre manquant dans la méthode MiniServerUI.initialiserComposants.");
 
         // TODO : À compléter/modifier
 

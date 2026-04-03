@@ -692,7 +692,7 @@ public class GestionnaireLivraisons extends Observable implements GestionnaireEv
         System.out.println(msg);
 
         // TODO : À compléter/modifier
-        System.err.println("Méthode GestionnaireLivraisons.notifierEcouteursConsole non implémentée.");
+        //System.err.println("Méthode GestionnaireLivraisons.notifierEcouteursConsole non implémentée.");
         return;
     }
 }
