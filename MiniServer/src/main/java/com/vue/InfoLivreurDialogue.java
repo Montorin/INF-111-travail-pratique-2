@@ -1,6 +1,8 @@
 package com.vue;
 
 import com.gestionnaireLivraisons.*;
+import com.observer.Observable;
+import com.observer.Observateur;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -13,7 +15,7 @@ import java.util.Vector;
  * Classe qui affiche la boite de dialogue pour les informations d'un livreur.
  *
  */
-public class InfoLivreurDialogue extends JDialog {
+public class InfoLivreurDialogue extends JDialog implements Observateur {
 
     private Livreur livreur;
 
@@ -31,6 +33,7 @@ public class InfoLivreurDialogue extends JDialog {
     public InfoLivreurDialogue(MiniServerUI miniServerUI, Livreur livreur) {
         super(miniServerUI, "Informations livreur", false);
         this.livreur = livreur;
+        this.livreur.ajouterObservateur(this); // Question 2.5
 
         this.initialiserComposants();
 
@@ -81,13 +84,7 @@ public class InfoLivreurDialogue extends JDialog {
         panneauTables.add(this.grilleLivraisonsEffectuees);
 
         this.add(panneauTables, BorderLayout.CENTER);
-
-        // remplir donner
-        Vector<Vector<String>> donneesEnCours = calculerDonnees(this.livreur.getLivraisonsEnCours());
-        Vector<Vector<String>> donneesEffectuees = calculerDonnees(this.livreur.getLivraisonsEffectuees());
-
-        this.grilleLivraisonsEnCours.mettreAJour(donneesEnCours);
-        this.grilleLivraisonsEffectuees.mettreAJour(donneesEffectuees);
+        this.seMettreAJour(this.livreur);
 
         // 3. Bouton fermer
         JPanel panneauBouton = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -122,5 +119,14 @@ public class InfoLivreurDialogue extends JDialog {
             }
         }
         return matriceDonnees;
+    }
+
+    @Override
+    public void seMettreAJour(Observable observable) {
+        Vector<Vector<String>> donneesEnCours = calculerDonnees(this.livreur.getLivraisonsEnCours());
+        Vector<Vector<String>> donneesEffectuees = calculerDonnees(this.livreur.getLivraisonsEffectuees());
+
+        this.grilleLivraisonsEnCours.mettreAJour(donneesEnCours);
+        this.grilleLivraisonsEffectuees.mettreAJour(donneesEffectuees);
     }
 }

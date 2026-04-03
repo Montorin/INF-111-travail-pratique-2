@@ -59,7 +59,7 @@ public class PanneauLivreurs extends JPanel implements Observateur {
      * @param ecouteurLL L'écouteur à ajouter.
      */
     public void enregisterEcouteur(EcouteurListeLivreurs ecouteurLL) {
-        // this.tableLivreurs.enregistrerEcouteur(ecouteurLL); // TODO: TO FIX
+        this.tableLivreurs.enregistrerEcouteur(ecouteurLL);
     }
 
     /**

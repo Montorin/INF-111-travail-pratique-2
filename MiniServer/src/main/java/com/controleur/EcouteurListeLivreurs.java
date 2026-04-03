@@ -29,6 +29,7 @@ public class EcouteurListeLivreurs extends MouseAdapter {
         if (e.getClickCount() == 2) {
             Livreur livreur = this.panneauLivreurs.livreurSelectionne();
 
+            // ouvre la page d'info du livreur selectionner
             if (livreur != null) {
                 new InfoLivreurDialogue(this.panneauLivreurs.getMiniServerUI(), livreur);
             }
