@@ -1,12 +1,17 @@
 package com.controleur;
 
+import com.gestionnaireLivraisons.Livreur;
+import com.vue.InfoLivreurDialogue;
 import com.vue.PanneauLivreurs;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * La classe des écouteurs de la liste (Table de ComposantTable) de livreurs.
  *
  */
-public class EcouteurListeLivreurs {
+public class EcouteurListeLivreurs extends MouseAdapter {
 
     private PanneauLivreurs panneauLivreurs;
 
@@ -15,9 +20,18 @@ public class EcouteurListeLivreurs {
      * @param panneauLivreurs Le panneau à écouter.
      */
     public EcouteurListeLivreurs(PanneauLivreurs panneauLivreurs) {
-        // TODO : À compléter/modifier
         this.panneauLivreurs = panneauLivreurs;
     }
 
-    // TODO : À compléter/modifier
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // double click
+        if (e.getClickCount() == 2) {
+            Livreur livreur = this.panneauLivreurs.livreurSelectionne();
+
+            if (livreur != null) {
+                new InfoLivreurDialogue(this.panneauLivreurs.getMiniServerUI(), livreur);
+            }
+        }
+    }
 }
