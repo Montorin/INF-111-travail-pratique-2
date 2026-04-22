@@ -4,6 +4,7 @@ import com.gestionnaireLivraisons.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 /**
  * La classe qui constitue la table des livraisons.
@@ -25,15 +26,9 @@ public class PanneauLivraisons extends JPanel {
      */
     public PanneauLivraisons(GestionnaireLivraisons gestionnaireLivraisons) {
         // TODO : À compléter/modifier
-
-        this.gestionnaireLivraisons = gestionnaireLivraisons;
-        this.setLayout(new BorderLayout());
-
-
-        this.tableLivraisons = new ComposantTable("PanneauLivraisons", 100, 100, nomsColonnes, donneesCentrees);
-        this.add(new JScrollPane(tableLivraisons), BorderLayout.CENTER);
-        //System.err.println("Méthode PanneauLivraisons.PanneauLivraisons non implémentée.");
+        System.err.println("Méthode PanneauLivraisons.PanneauLivraisons non implémentée.");
     }
+
 
     // TODO : À compléter/modifier
 }
