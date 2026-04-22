@@ -1,9 +1,13 @@
 package com.vue;
 
 import com.gestionnaireLivraisons.GestionnaireLivraisons;
+import com.gestionnaireLivraisons.Livraison;
 import com.gestionnaireLivraisons.Priorite;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * La classe pour les boites de dialogues d'ajout d'une livraison.
@@ -31,9 +35,52 @@ public class AjoutLivraisonDialogue extends JDialog {
      *
      */
     public void initialiserComposants() {
-        // TODO : À compléter/modifier
-        System.err.println("Méthode AjoutLivraisonDialogue.initialiserComposants non implémentée.");
+        this.setLayout(new BorderLayout(10, 10));
 
+        JPanel panneauForm = new JPanel(new GridLayout(2, 2, 8, 8));
+        JLabel labelLot = new JLabel("Lot :");
+        JTextField champLot = new JTextField();
+        JLabel labelPriorite = new JLabel("Priorité :");
+        JComboBox<Priorite> comboPriorite = new JComboBox<>(Priorite.values());
+
+        panneauForm.add(labelLot);
+        panneauForm.add(champLot);
+        panneauForm.add(labelPriorite);
+        panneauForm.add(comboPriorite);
+
+        JPanel panneauBoutons = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton boutonAjouter = new JButton("Ajouter");
+        JButton boutonAnnuler = new JButton("Annuler");
+        panneauBoutons.add(boutonAjouter);
+        panneauBoutons.add(boutonAnnuler);
+
+        boutonAjouter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    int lot = Integer.parseInt(champLot.getText().trim());
+                    Priorite priorite = (Priorite) comboPriorite.getSelectedItem();
+                    ajouterLivraison(lot, priorite);
+                } catch (NumberFormatException ex) {
+                    afficherErreur("Le numéro de lot doit être un entier.");
+                }
+            }
+        });
+
+        boutonAnnuler.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+
+        this.add(panneauForm, BorderLayout.CENTER);
+        this.add(panneauBoutons, BorderLayout.SOUTH);
+
+        this.pack();
+        this.setResizable(false);
+        this.setLocationRelativeTo(this.miniServerUI);
+        this.setVisible(true);
     }
 
     /**
@@ -55,8 +102,23 @@ public class AjoutLivraisonDialogue extends JDialog {
      * @param priorite La priorité de la livraison.
      */
     private void ajouterLivraison(int lot, Priorite priorite) {
-        // TODO : À compléter/modifier
-        System.err.println("Méthode AjoutLivraisonDialogue.ajouterLivraison non implémentée.");
+        int lotMaxPermis = Math.max(1, Livraison.lotMaximal() + 1);
+        if (!Livraison.validerLotLivraison(lot) && !(Livraison.lotMaximal() < 0 && lot == 1)) {
+            afficherErreur("Numéro de lot invalide. Valeurs permises : 1 à " + lotMaxPermis + ".");
+            return;
+        }
+
+        Livraison livraison = new Livraison(priorite, lot);
+        this.gestionnaireLivraisons.getLivraisonsAEffectuer().ajouter(livraison);
+        this.gestionnaireLivraisons.notifierObservateurs();
+
+        JOptionPane.showMessageDialog(
+                this.miniServerUI,
+                "Livraison ajoutée avec succès.",
+                "Confirmation",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+        this.dispose();
     }
 
 }

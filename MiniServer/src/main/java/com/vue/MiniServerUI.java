@@ -2,8 +2,14 @@ package com.vue;
 
 import com.atoudeft.serveur.Serveur;
 import com.gestionnaireLivraisons.GestionnaireLivraisons;
-
+import com.controleur.EcouteurMenuApplication;
+import  com.controleur.EcouteurListeLivreurs;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * La classe principale de l'interface utilisateur de l'application MiniServer
@@ -57,20 +63,54 @@ public class MiniServerUI extends JFrame {
     private void initialiserComposants() {
         // Le menu
         JMenuBar menuBar = new JMenuBar();
-        // TODO : À compléter/modifier
-        // se reporter à la documentation de JMenu et JMenuBar pour cette partie...
-        //System.err.println("Menu non implémenté dans la méthode MiniServerUI.initialiserComposants.");
+        JMenu menuApplication = new JMenu("Application");
 
+        JMenuItem itemAjouterLivraison = new JMenuItem("Ajouter Livraison");
+        itemAjouterLivraison.setActionCommand(EcouteurMenuApplication.CMD_AJOUTER_LIVRAISON);
 
-        //  Préparer le contenu de la fenêtre.
-        // TODO : À compléter/modifier
-        //System.err.println("Contenu de la fenêtre manquant dans la méthode MiniServerUI.initialiserComposants.");
+        JMenuItem itemAfficherStatistiques = new JMenuItem("Afficher les statistiques");
+        itemAfficherStatistiques.setActionCommand(EcouteurMenuApplication.CMD_AFFICHER_STATISTIQUES);
 
-        // TODO : À compléter/modifier
-       // System.err.println("Ecouteur de fermeture de fenêtre manquant dans la méthode MiniServerUI.initialiserComposants.");
+        JMenuItem itemQuitter = new JMenuItem("Quitter l'application");
 
-        // TODO : À compléter/modifier
+        EcouteurMenuApplication ecouteurMenu = new EcouteurMenuApplication(this);
+        itemAjouterLivraison.addActionListener(ecouteurMenu);
+        itemAfficherStatistiques.addActionListener(ecouteurMenu);
 
+        itemQuitter.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                quitter();
+            }
+        });
+
+        menuApplication.add(itemAjouterLivraison);
+        menuApplication.add(itemAfficherStatistiques);
+        menuApplication.addSeparator();
+        menuApplication.add(itemQuitter);
+        menuBar.add(menuApplication);
+        this.setJMenuBar(menuBar);
+
+        PanneauLivreurs panneauLivreurs = new PanneauLivreurs(this, this.gestionnaireLivraisons);
+        PanneauLivraisons panneauLivraisons = new PanneauLivraisons(this.gestionnaireLivraisons);
+        PanneauConsole panneauConsole = new PanneauConsole(this.gestionnaireLivraisons);
+
+        panneauLivreurs.enregisterEcouteur(new EcouteurListeLivreurs(panneauLivreurs));
+
+        JSplitPane haut = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panneauLivreurs, panneauLivraisons);
+        haut.setResizeWeight(0.5);
+        haut.setBorder(null);
+
+        JSplitPane principale = new JSplitPane(JSplitPane.VERTICAL_SPLIT, haut, panneauConsole);
+        principale.setResizeWeight(0.66);
+        principale.setBorder(null);
+
+        this.setContentPane(principale);
+
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                quitter();
+            }
+        });
 
     }
 
