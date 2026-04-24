@@ -3,6 +3,7 @@ package com.controleur;
 
 import com.vue.AjoutLivraisonDialogue;
 import com.vue.MiniServerUI;
+import com.vue.StatistiquesDialogue;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,7 +30,7 @@ public class EcouteurMenuApplication implements ActionListener {
         if(CMD_AJOUTER_LIVRAISON.equals(cmd)) {
             new AjoutLivraisonDialogue(this.miniServerUI, this.miniServerUI.getGestionnaireLivraisons());
         } else if(CMD_AFFICHER_STATISTIQUES.equals(cmd)) {
-            new AjoutLivraisonDialogue(this.miniServerUI, this.miniServerUI.getGestionnaireLivraisons());
+            new StatistiquesDialogue(this.miniServerUI, this.miniServerUI.getGestionnaireLivraisons());
         }
     }
 }

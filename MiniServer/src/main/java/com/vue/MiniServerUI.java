@@ -30,6 +30,7 @@ public class MiniServerUI extends JFrame {
         this.gestionnaireLivraisons = gestionnaireLivraisons;
         this.initialiserComposants();
         this.configurerFenetrePrincipale();
+
     }
 
     /**
@@ -111,7 +112,6 @@ public class MiniServerUI extends JFrame {
                 quitter();
             }
         });
-
     }
 
     /**

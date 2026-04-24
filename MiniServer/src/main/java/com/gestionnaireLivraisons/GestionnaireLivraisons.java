@@ -73,6 +73,26 @@ public class GestionnaireLivraisons extends Observable implements GestionnaireEv
         return this.livreursAuthentifies;
     }
 
+    public int getLivraisonsNombreEffectuees() {
+        int total = 0;
+
+        for (Livreur livreur : this.livreursEnregistres) {
+            total += livreur.nbLivraisonsEffectuees();
+        }
+
+        return total;
+    }
+
+    public int getLivraisonsNombreEnCours() {
+        int total = 0;
+
+        for (Livreur livreur : this.livreursAuthentifies.values()) {
+            total += livreur.nbLivraisonsEnCours();
+        }
+
+        return total;
+    }
+
     /**
      * Retourne la liste des livraisons à effectuer.
      *

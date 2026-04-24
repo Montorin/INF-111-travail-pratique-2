@@ -1,17 +1,21 @@
 package com.vue;
 
 import com.gestionnaireLivraisons.*;
+import com.observer.Observable;
+import com.observer.Observateur;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
+import java.util.Observer;
+import com.observer.Observateur;
+import java.util.Observer;
 import java.util.Vector;
 
 /**
  * La classe qui constitue la table des livraisons.
  *
  */
-public class PanneauLivraisons extends JPanel {
+public class PanneauLivraisons extends JPanel implements Observateur {
 
     private ComposantTable tableLivraisons;
 
@@ -29,6 +33,8 @@ public class PanneauLivraisons extends JPanel {
         this.gestionnaireLivraisons = gestionnaireLivraisons;
 
         this.tableLivraisons = new ComposantTable("liste des livraisons", 450, 250, this.nomsColonnes, this.donneesCentrees);
+
+        this.gestionnaireLivraisons.ajouterObservateur(this);
 
         this.setLayout(new BorderLayout());
         this.add(tableLivraisons, BorderLayout.CENTER);
@@ -55,10 +61,6 @@ public class PanneauLivraisons extends JPanel {
                 donnees.add(this.creerLigne(livraison));
             }
         }
-
-        for(Livraison livraison : this.gestionnaireLivraisons.getLivraisonsAEffectuer()){
-            donnees.add(this.creerLigne(livraison));
-        }
         return donnees;
     }
 
@@ -76,4 +78,8 @@ public class PanneauLivraisons extends JPanel {
         return statut.name().replace("_", " ");
     }
 
+    @Override
+    public void seMettreAJour(Observable observable) {
+        mettreAJour();
+    }
 }
