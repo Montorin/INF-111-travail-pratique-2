@@ -9,7 +9,6 @@ import com.observer.Observable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -130,7 +129,7 @@ public class GestionnaireLivraisons extends Observable implements GestionnaireEv
         try {
             this.notifierEcouteursConsole("Lecture du fichier des livreurs...");
 
-            List<String> lignes = Files.readAllLines(Path.of(Config.fichierLivreurs), StandardCharsets.UTF_8);
+            List<String> lignes = Files.readAllLines(Config.cheminFichierLivreurs(), StandardCharsets.UTF_8);
 
             for (String ligne : lignes) {
                 ligne = ligne.trim();
@@ -178,7 +177,7 @@ public class GestionnaireLivraisons extends Observable implements GestionnaireEv
             }
             contenu.insert(0, "#  structure <id livreur> <type livreur> <nom livreur>\n");
 
-            Files.writeString(Path.of(Config.fichierLivreurs), contenu.toString(), StandardCharsets.UTF_8);
+            Files.writeString(Config.cheminFichierLivreurs(), contenu.toString(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             System.err.println("ERREUR dans l'écriture du fichier de livreurs.");
             System.exit(-1);
